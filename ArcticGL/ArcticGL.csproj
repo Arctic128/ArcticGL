@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0-windows7.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="NWT_Process">
+      <HintPath>..\..\NWT_Process\NWT_Process\bin\Release\NWT_Process.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>
