@@ -1,4 +1,5 @@
 ﻿using NWT_Process;
+using System.Windows.Forms;
 
 namespace ArcticGL
 {
@@ -317,30 +318,28 @@ namespace ArcticGL
                     return 0;
                 }
                 //Math_Basis.Vector NormalVector0 = (discribledGraph0.Points[1] - discribledGraph0.Points[0]) % (discribledGraph0.Points[2] - discribledGraph0.Points[0]);
-                for (int i = 0, j = 0; ; ++j)
+                for (int i = 0; i <= (discribledGraph0.Points.Length - 1); ++i)
                 {
-                    if (i <= (discribledGraph0.Points.Length - 1))
+                    if ((bool)NWT_Process.Math.IsSameSign(Math_Basis.Vector.Cosine(discribledGraph0.Points[i] - discribledGraph1.Points[0], discribledGraph0.NormalVector), Math_Basis.Vector.Cosine(discribledGraph0.Points[i] - discribledGraph1.Points[1], discribledGraph0.NormalVector)))
                     {
-                        if (NWT_Process.Math.IsSameSign(Math_Basis.Vector.Cosine(discribledGraph1.Points[i] - discribledGraph0.Points[j], discribledGraph0.NormalVector), ))
+                        if ((bool)NWT_Process.Math.IsSameSign(Math_Basis.Vector.Cosine(discribledGraph0.Points[i] - discribledGraph1.Points[1], discribledGraph0.NormalVector), Math_Basis.Vector.Cosine(discribledGraph0.Points[i] - discribledGraph1.Points[2], discribledGraph0.NormalVector)))
                         {
-
+                            if (i == (discribledGraph0.Points.Length - 1))
+                            {
+                                return true;
+                            }
                         }
                         else
                         {
-
+                            return false;
                         }
                     }
                     else
                     {
-
-                    }
-                    if (j >= (discribledGraph0.Points.Length - 1))
-                    {
-                        j = 0;
-                        ++i;
+                        return false;
                     }
                 }
-                
+                return false;//in sure of the safety
             }
             
         }
