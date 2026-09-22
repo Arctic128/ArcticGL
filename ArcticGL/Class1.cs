@@ -143,6 +143,10 @@ namespace ArcticGL
                 return new Vector(point.x, point.y, point.z);
             }
         }
+        private class Solutions
+        {
+            
+        }
     }
     public class Graphics3D
     {
@@ -230,7 +234,7 @@ namespace ArcticGL
                 }
                 */
             }
-            public Point[] Render(DiscribledGraph graph)
+            private Point[] Render(DiscribledGraph graph)
             {
                 Math_Basis.Point3D[] Points_Real = new Math_Basis.Point3D[graph.Points.Length];//3d////////////////////////////////////////////////////////////////////////////////
                 Point[] Points_Render = new Point[graph.Points.Length];//2d
@@ -296,24 +300,70 @@ namespace ArcticGL
                 */
                 return Points_Render;
             }
+            //In memory of the revolutional progress
             public void a()
             {
                 Pen pen = new Pen(Color.White, 1);
                 this.MainGraphics.DrawLine(pen, 0, 0, 100, 100);
             }
+            //
+            private DiscribledGraph DeconstructNFPs(DiscribledGraph[] NFPs)
+            {
+                int i = 0;
+                foreach (DiscribledGraph NFP in NFPs)
+                {
+
+                }
+            }
+            private void RenderTwoFPs(DiscribledGraph discribledGraph0, DiscribledGraph discribledGraph1)
+            {
+                Graphics graphics = this.MainGraphics;
+                if ((discribledGraph0.IsaFinitePlane = false) || (discribledGraph1.IsaFinitePlane = false))
+                {
+                    graphics = null;
+                }
+                else if ((bool)DiscribledGraph.IfOneSide(discribledGraph0, discribledGraph1) == true)
+                {
+
+                }
+                else
+                {
+
+                }
+            }
+            public void DrawDG(DiscribledGraph[] discribledGraphs)
+            {
+                DiscribledGraph[] FinitePlanes = new DiscribledGraph[discribledGraphs.Length];
+                DiscribledGraph[] NotFinitePlanes = new DiscribledGraph[discribledGraphs.Length];
+                int i = 0;
+                foreach (DiscribledGraph discribledGraph in discribledGraphs)
+                {
+                    if (discribledGraph.IsaFinitePlane == true)
+                    {
+                        FinitePlanes[i] = discribledGraph;
+                        i++;
+                    }
+                    else
+                    {
+                        NotFinitePlanes[i] = discribledGraph;
+                        i++;
+                    }
+                }
+
+            }
         }
         public class DiscribledGraph
         {
             public Math_Basis.Point3D[] Points;
-            public Pen StuffPen;
+            //public Pen StuffPen;
             public bool IfStuff = false;
             public bool IsaFinitePlane = false;
             public readonly Math_Basis.Vector NormalVector;//alternative
             //构造函数
-            public DiscribledGraph(Math_Basis.Point3D[] points, Pen stuffpen, bool ifstuff = false)
+            public DiscribledGraph(Math_Basis.Point3D[] points,/* Pen stuffpen, */bool ifstuff = false)
             {
                 this.Points = points;
-                this.StuffPen = stuffpen;
+                //this.StuffPen = stuffpen;
                 this.IfStuff = ifstuff;
                 if (this.Points.Length == 3)
                 {
@@ -322,7 +372,7 @@ namespace ArcticGL
                 }
             }
             //方法
-            
+            //安全问题！！！待修正
             public static object IfOneSide(DiscribledGraph discribledGraph0, DiscribledGraph discribledGraph1)
             {
                 if ((discribledGraph0.IsaFinitePlane = false) || (discribledGraph1.IsaFinitePlane = false))
@@ -361,9 +411,13 @@ namespace ArcticGL
 
 
 
-//the things have not been done:
-//透视算法
+//things have not been done:
+//透视算法<完成>
 //误差调整
 //质量设定（user）
-//connect
-//line
+//connect<弃用>
+//line<暂不开发>
+//比较三个数大小PS
+//拆分dgs to fps
+//如何把多个填充ps正确渲染
+//三向量法计算重叠
