@@ -148,6 +148,9 @@ namespace ArcticGL
     {
         public class Camera
         {
+            //To GDI+
+            public Graphics MainGraphics;
+            
             //Renderer_Main
             Math_Basis.Point3D Eyes;
             Math_Basis.Plane VisionPlane;
@@ -287,7 +290,16 @@ namespace ArcticGL
                     Points_Render_Connect_Return[i] = Points_Render_Connect[i];
                 }
                 */
+                /*
+                Pen pen = new Pen(Color.White, 1);
+                this.MainGraphics.DrawLine(pen, 0, 0, 100, 100);
+                */
                 return Points_Render;
+            }
+            public void a()
+            {
+                Pen pen = new Pen(Color.White, 1);
+                this.MainGraphics.DrawLine(pen, 0, 0, 100, 100);
             }
         }
         public class DiscribledGraph
@@ -296,7 +308,7 @@ namespace ArcticGL
             public Pen StuffPen;
             public bool IfStuff = false;
             public bool IsaFinitePlane = false;
-            public Math_Basis.Vector NormalVector;//alternative
+            public readonly Math_Basis.Vector NormalVector;//alternative
             //构造函数
             public DiscribledGraph(Math_Basis.Point3D[] points, Pen stuffpen, bool ifstuff = false)
             {
@@ -341,6 +353,7 @@ namespace ArcticGL
                 }
                 return false;//in sure of the safety
             }
+            
             
         }
     }
