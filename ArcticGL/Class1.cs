@@ -306,7 +306,7 @@ namespace ArcticGL
                 Pen pen = new Pen(Color.White, 1);
                 this.MainGraphics.DrawLine(pen, 0, 0, 100, 100);
             }
-            //
+            ///
             private DiscribledGraph DeconstructNFPs(DiscribledGraph[] NFPs)
             {
                 int i = 0;
