@@ -1,4 +1,5 @@
 ﻿using NWT_Process;
+using System.Numerics;
 using System.Windows.Forms;
 
 namespace ArcticGL
@@ -143,10 +144,7 @@ namespace ArcticGL
                 return new Vector(point.x, point.y, point.z);
             }
         }
-        private class Solutions
-        {
-            
-        }
+        
     }
     public class Graphics3D
     {
@@ -306,13 +304,13 @@ namespace ArcticGL
                 Pen pen = new Pen(Color.White, 1);
                 this.MainGraphics.DrawLine(pen, 0, 0, 100, 100);
             }
-            //
+            ///
             private DiscribledGraph DeconstructNFPs(DiscribledGraph[] NFPs)
             {
                 int i = 0;
                 foreach (DiscribledGraph NFP in NFPs)
                 {
-
+                    
                 }
             }
             private void RenderTwoFPs(DiscribledGraph discribledGraph0, DiscribledGraph discribledGraph1)
@@ -324,6 +322,12 @@ namespace ArcticGL
                 }
                 else if ((bool)DiscribledGraph.IfOneSide(discribledGraph0, discribledGraph1) == true)
                 {
+                    double MaxCosineValue0;
+                    double MaxCosineValue1;
+                    Math_Basis.Vector ResultantVector0 = (discribledGraph0.Points[0] - this.Eyes) + (discribledGraph0.Points[1] - this.Eyes) + (discribledGraph0.Points[2] - this.Eyes);
+                    Math_Basis.Vector ResultantVector1 = (discribledGraph1.Points[0] - this.Eyes) + (discribledGraph1.Points[1] - this.Eyes) + (discribledGraph1.Points[2] - this.Eyes);
+                    MaxCosineValue0 = Solutions.MaxIn3Num(Math_Basis.Vector.Cosine(discribledGraph0.Points[0] - this.Eyes, ResultantVector0), Math_Basis.Vector.Cosine(discribledGraph0.Points[1] - this.Eyes, ResultantVector0), Math_Basis.Vector.Cosine(discribledGraph0.Points[2] - this.Eyes, ResultantVector0));
+                    MaxCosineValue1 = Solutions.MaxIn3Num(Math_Basis.Vector.Cosine(discribledGraph1.Points[0] - this.Eyes, ResultantVector1), Math_Basis.Vector.Cosine(discribledGraph1.Points[1] - this.Eyes, ResultantVector1), Math_Basis.Vector.Cosine(discribledGraph1.Points[2] - this.Eyes, ResultantVector1));
 
                 }
                 else
@@ -331,6 +335,19 @@ namespace ArcticGL
 
                 }
             }
+            //放到disc里面去变成一个非静态
+            private bool IsFPVisible(DiscribledGraph discribledGraph)
+            {
+                foreach (Math_Basis.Point3D point in discribledGraph.Points)
+                {
+                    if (Math_Basis.Vector.Length(this.VisionVector) > (Math_Basis.Vector.Cosine(this.VisionVector, point - this.Eyes) * Math_Basis.Vector.Length(point - this.Eyes)))
+                    {
+                        return false;
+                    }
+                }
+                return true;
+            }
+            //
             public void DrawDG(DiscribledGraph[] discribledGraphs)
             {
                 DiscribledGraph[] FinitePlanes = new DiscribledGraph[discribledGraphs.Length];
@@ -421,3 +438,4 @@ namespace ArcticGL
 //拆分dgs to fps
 //如何把多个填充ps正确渲染
 //三向量法计算重叠
+//创建Math_Basis里的有限平面
