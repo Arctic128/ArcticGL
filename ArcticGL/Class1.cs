@@ -171,7 +171,7 @@ namespace ArcticGL
             */
             //Other
             //private Math_Basis.Point3D Point_000 = new Math_Basis.Point3D(0, 0, 0);//3d
-            //private Point Point_00 = new Point(0, 0);//2d
+            //private Point Point_00 = new Point(0, 0);//2d//
             public int ResolutionRatio_X = 1920;
             public int ResolutionRatio_Y = 1080;
             public double Zoom = 2500.65326543;
@@ -335,7 +335,7 @@ namespace ArcticGL
 
                 }
             }
-            //放到disc里面去变成一个非静态
+            //放到disc里面去变成一个非静态//
             private bool IsFPVisible(DiscribledGraph discribledGraph)
             {
                 foreach (Math_Basis.Point3D point in discribledGraph.Points)
