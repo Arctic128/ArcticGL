@@ -43,6 +43,23 @@ namespace ArcticGL
         }
         public class Line
         {
+            public Point3D StartPoint;
+            public Vector DirectionVector;
+            public Point3D Point0, Point1;//alternative
+            public Line(Point3D startpoint, Vector directionvector)
+            {
+                this.StartPoint = startpoint;
+                this.DirectionVector = directionvector;
+                this.Point0 = startpoint;
+                this.Point1 = Point3D.Move_Unit(this.Point0, DirectionVector, 1);//vibe coding
+            }
+            public Line(Point3D point0, Point3D point1)
+            {
+                this.Point0 = point0;
+                this.Point1 = point1;
+                this.StartPoint = point0;
+                this.DirectionVector = point1 - point0;//vibe coding
+            }
 
         }
         public class Plane
@@ -122,6 +139,12 @@ namespace ArcticGL
             {
                 return new Vector(-vector.x, -vector.y, -vector.z);
             }
+            /*
+            public static Vector operator /(Vector vector, double argv)
+            {
+                return new Vector(vector.x / argv, vector.y / argv, vector.z / argv);
+            }
+            */
             //方法
             public static double Length(Vector vector)
             {
@@ -144,7 +167,29 @@ namespace ArcticGL
                 return new Vector(point.x, point.y, point.z);
             }
         }
-        
+        public class FinitePlane
+        {
+            public Point3D Point0;
+            public Point3D Point1;
+            public Point3D Point2;
+            public Vector NormalVector;
+            public Plane Plane;
+            public FinitePlane(Point3D point0, Point3D point1, Point3D point2)
+            {
+                this.Point0 = point0;
+                this.Point1 = point1;
+                this.Point2 = point2;
+                this.NormalVector = (point1 - point0) % (point2 - point0);
+                this.Plane = new Plane(point0, NormalVector);
+            }
+        }
+        //方法
+        public static Point3D PlanePointIntersection(Plane plane, Line line)
+        {
+            double t;
+            t = -(plane.A * line.StartPoint.x + plane.B * line.StartPoint.y + plane.C * line.StartPoint.z + plane.D) / (plane.A * line.DirectionVector.x + plane.B * line.DirectionVector.y + plane.C * line.DirectionVector.z);
+            return Point3D.Move_Real(line.StartPoint, Vector.Zoom(line.DirectionVector, t));
+        }
     }
     public class Graphics3D
     {
@@ -232,6 +277,7 @@ namespace ArcticGL
                 }
                 */
             }
+            //渲染算法（Ranora.C开发，Arctic实现）
             private Point[] Render(DiscribledGraph graph)
             {
                 Math_Basis.Point3D[] Points_Real = new Math_Basis.Point3D[graph.Points.Length];//3d////////////////////////////////////////////////////////////////////////////////
@@ -304,8 +350,8 @@ namespace ArcticGL
                 Pen pen = new Pen(Color.White, 1);
                 this.MainGraphics.DrawLine(pen, 0, 0, 100, 100);
             }
-            ///
-            private DiscribledGraph DeconstructNFPs(DiscribledGraph[] NFPs)
+            //正在开发
+            private DiscribledGraph DeconstructDGToNFPs(DiscribledGraph[] NFPs)
             {
                 int i = 0;
                 foreach (DiscribledGraph NFP in NFPs)
@@ -313,22 +359,53 @@ namespace ArcticGL
                     
                 }
             }
+            //正在开发
             private void RenderTwoFPs(DiscribledGraph discribledGraph0, DiscribledGraph discribledGraph1)
             {
                 Graphics graphics = this.MainGraphics;
-                if ((discribledGraph0.IsaFinitePlane = false) || (discribledGraph1.IsaFinitePlane = false))
+                if ((discribledGraph0.IsaFinitePlane == false) || (discribledGraph1.IsaFinitePlane == false))
                 {
                     graphics = null;
                 }
+                
                 else if ((bool)DiscribledGraph.IfOneSide(discribledGraph0, discribledGraph1) == true)
                 {
                     double MaxCosineValue0;
                     double MaxCosineValue1;
+                    bool IfOverlap0 = false;
                     Math_Basis.Vector ResultantVector0 = (discribledGraph0.Points[0] - this.Eyes) + (discribledGraph0.Points[1] - this.Eyes) + (discribledGraph0.Points[2] - this.Eyes);
                     Math_Basis.Vector ResultantVector1 = (discribledGraph1.Points[0] - this.Eyes) + (discribledGraph1.Points[1] - this.Eyes) + (discribledGraph1.Points[2] - this.Eyes);
                     MaxCosineValue0 = Solutions.MaxIn3Num(Math_Basis.Vector.Cosine(discribledGraph0.Points[0] - this.Eyes, ResultantVector0), Math_Basis.Vector.Cosine(discribledGraph0.Points[1] - this.Eyes, ResultantVector0), Math_Basis.Vector.Cosine(discribledGraph0.Points[2] - this.Eyes, ResultantVector0));
                     MaxCosineValue1 = Solutions.MaxIn3Num(Math_Basis.Vector.Cosine(discribledGraph1.Points[0] - this.Eyes, ResultantVector1), Math_Basis.Vector.Cosine(discribledGraph1.Points[1] - this.Eyes, ResultantVector1), Math_Basis.Vector.Cosine(discribledGraph1.Points[2] - this.Eyes, ResultantVector1));
+                    foreach (Math_Basis.Point3D point in discribledGraph0.Points)
+                    {
+                        if (Math_Basis.Vector.Cosine(point - this.Eyes, ResultantVector1) <= MaxCosineValue1)
+                        {
+                            IfOverlap0 = true;
 
+                            break;
+                        }
+                    }
+                    if (IfOverlap0 == false)
+                    {
+                        foreach (Math_Basis.Point3D point in discribledGraph1.Points)
+                        {
+                            if (Math_Basis.Vector.Cosine(point - this.Eyes, ResultantVector0) <= MaxCosineValue0)
+                            {
+                                IfOverlap0 = true;
+
+                                break;
+                            }
+                        }
+                    }
+                    if (IfOverlap0 == true)
+                    {
+
+                    }
+                    else
+                    {
+
+                    }
                 }
                 else
                 {
@@ -347,7 +424,7 @@ namespace ArcticGL
                 }
                 return true;
             }
-            //
+            //正在开发
             public void DrawDG(DiscribledGraph[] discribledGraphs)
             {
                 DiscribledGraph[] FinitePlanes = new DiscribledGraph[discribledGraphs.Length];
@@ -389,10 +466,10 @@ namespace ArcticGL
                 }
             }
             //方法
-            //安全问题！！！待修正
+            //安全问题！！！待修正（存在算法问题，已被弃用）
             public static object IfOneSide(DiscribledGraph discribledGraph0, DiscribledGraph discribledGraph1)
             {
-                if ((discribledGraph0.IsaFinitePlane = false) || (discribledGraph1.IsaFinitePlane = false))
+                if ((discribledGraph0.IsaFinitePlane == false) || (discribledGraph1.IsaFinitePlane == false))
                 {
                     return 0;
                 }
@@ -420,7 +497,17 @@ namespace ArcticGL
                 }
                 return false;//in sure of the safety
             }
-            
+            public object IfFPsIntersect(DiscribledGraph discribledGraph0, DiscribledGraph discribledGraph1)
+            {
+                if (discribledGraph0.IsaFinitePlane == false || discribledGraph1.IsaFinitePlane == false)
+                {
+                    return 0;
+                }
+                else
+                {
+
+                }
+            }
             
         }
     }
@@ -433,9 +520,9 @@ namespace ArcticGL
 //误差调整
 //质量设定（user）
 //connect<弃用>
-//line<暂不开发>
-//比较三个数大小PS
+//line<开发完成>
+//比较三个数大小PS<完成>
 //拆分dgs to fps
 //如何把多个填充ps正确渲染
 //三向量法计算重叠
-//创建Math_Basis里的有限平面
+//创建Math_Basis里的有限平面<进行中>

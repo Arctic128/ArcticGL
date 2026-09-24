@@ -21,6 +21,6 @@ namespace ArcticGL
                 return value2;
             }
         }
-
+        
     }
 }
