@@ -335,7 +335,7 @@ namespace ArcticGL
 
                 }
             }
-            //放到disc里面去变成一个非静态//
+            //放到disc里面去变成一个非静态////
             private bool IsFPVisible(DiscribledGraph discribledGraph)
             {
                 foreach (Math_Basis.Point3D point in discribledGraph.Points)
